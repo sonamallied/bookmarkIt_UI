@@ -1,15 +1,15 @@
-import React from "react";
-import CustomModal from "./components/common/CustomModal";
-
+import React, { Component } from "react";
 import "./App.css";
 
-import { Component } from "react";
+import Main from "./main";
 
-export class App extends Component {
+class App extends Component {
   render() {
     return (
       <div>
-        <CustomModal />
+        {/* <Admin /> */}
+        {/* <User /> */}
+        <Main />
       </div>
     );
   }

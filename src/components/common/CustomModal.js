@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect } from "react";
 import Form from "react-bootstrap/Form";
 import { Modal, Button } from "react-bootstrap";
 import Card from "react-bootstrap/Card";
@@ -7,6 +7,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import FormControl from "react-bootstrap/FormControl";
 import "./Box.css";
+import { v4 as uuidv4 } from "uuid";
 
 function CustomModal() {
   const [show, setShow] = useState(false);
@@ -14,9 +15,11 @@ function CustomModal() {
   const [inputList, setInputList] = useState([]);
 
   const [longUrl, setLongUrl] = useState("");
-  const [chikcletName, setchickletName] = useState("");
+  const [chickletName, setchickletName] = useState("");
 
   const [success, setSuccess] = useState([]);
+
+  const [request, setResuest] = useState([""]);
 
   const cardClick = () => {
     alert();
@@ -41,30 +44,35 @@ function CustomModal() {
   const handleShow = () => setShow(true);
 
   const handleSubmit = (event) => {
-    event.preventDefault();
+    //event.preventDefault();
 
     fetch("http://localhost:5000/requestChikclet", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        "Content-Type":"application/json",
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         longUrl: longUrl,
-        chikcletName : chikcletName
-      })
-    })
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          console.log(result);
-        },
-        // Note: it's important to handle errors here
-        // instead of a catch() block so that we don't swallow
-        // exceptions from actual bugs in components.
-        (error) => {
-          console.log(error);
-        }
-      );
+        chikcletName: chickletName,
+        guid: uuidv4(),
+      }),
+    });
+
+    setShow(false);
+  };
+
+  const handleRequest = () => {
+    fetch("http://localhost:5000/requestChikclet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        longUrl: longUrl,
+        chikcletName: chickletName,
+        guid: uuidv4(),
+      }),
+    });
   };
 
   return (
@@ -120,7 +128,7 @@ function CustomModal() {
                 name="chickletName"
                 id="chickletName"
                 onChange={(e) => setchickletName(e.target.value)}
-                value={chikcletName}
+                value={chickletName}
               />
 
               <Form.Label>Select Logo</Form.Label>
@@ -138,7 +146,7 @@ function CustomModal() {
         </form>
       </Modal>
 
-      <div className="grid">{inputList}</div>
+      <div className="grid">{request}</div>
     </>
   );
 }
